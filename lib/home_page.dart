@@ -64,8 +64,32 @@ class HomePage extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => WeatherPage(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      WeatherPage(),
+                              transitionsBuilder:
+                                  (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    var curve = Curves.easeOut;
+                                    var curveTween = CurveTween(curve: curve);
+                                    var slideTween = Tween<Offset>(
+                                      begin: Offset(0, 0.1),
+                                      end: Offset.zero,
+                                    ).chain(curveTween);
+                                    return FadeTransition(
+                                      opacity: animation.drive(curveTween),
+                                      child: SlideTransition(
+                                        position: animation.drive(slideTween),
+                                        child: child,
+                                      ),
+                                    );
+                                  },
+                              transitionDuration: Duration(milliseconds: 500),
                             ),
                           );
                         },
