@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wheather_application/main.dart';
+import 'package:wheather_application/weather_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -29,8 +30,8 @@ class HomePage extends StatelessWidget {
                   SizedBox(height: 20),
                   Row(
                     children: [
-                      Icon(Icons.dew_point, color: Colors.white,size: 30,),
-                      SizedBox(width:10),
+                      Icon(Icons.dew_point, color: Colors.white, size: 30),
+                      SizedBox(width: 10),
                       Text(
                         'K-Link',
                         style: TextStyle(
@@ -60,49 +61,62 @@ class HomePage extends StatelessWidget {
                   SizedBox(height: 100),
 
                   Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '<<< ',
-                          style: TextStyle(
-                            color: Colors.white24,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w400,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WeatherPage(),
                           ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.blueAccent.withOpacity(0.3),
-                                blurRadius: 40,
-                                spreadRadius: 10,
+                        );
+                      },
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '<<< ',
+                              style: TextStyle(
+                                color: Colors.white24,
+                                fontSize: 28,
+                                fontWeight: FontWeight.w400,
                               ),
-                            ],
-                          ),
-                          child: Text(
-                            'GET STARTED',
-                            style: TextStyle(
-                              color: Colors.white,
-                              letterSpacing: 1.5,
-                              fontWeight: FontWeight.w300,
-                              fontSize: 30,
                             ),
-                          ),
+                            Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.blueAccent.withOpacity(0.3),
+                                    blurRadius: 40,
+                                    spreadRadius: 10,
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                'GET STARTED',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  letterSpacing: 1.5,
+                                  fontWeight: FontWeight.w300
+                                ),
+                              ),
+                            ),
+                            Text(
+                              ' >>>',
+                              style: TextStyle(
+                                color: Colors.white24,
+                                fontSize: 28,
+                                fontWeight: FontWeight.w400
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '>>> ',
-                          style: TextStyle(
-                            color: Colors.white24,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(height: 30),
                 ],
               ),
             ),
