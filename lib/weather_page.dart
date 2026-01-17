@@ -10,7 +10,7 @@ class WeatherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
+      value: SystemUiOverlayStyle.dark,
       child: Scaffold(
         body: Stack(
           children: [
@@ -19,6 +19,14 @@ class WeatherPage extends StatelessWidget {
                 'assets/weather_page.jpg',
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.height,
+                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  if (wasSynchronouslyLoaded) return child;
+                  return AnimatedOpacity(
+                    opacity: frame == null ? 0 : 1,
+                    duration: const Duration(milliseconds: 500),
+                    child: child,
+                  );
+                },
               ),
             ),
             Center(
@@ -37,11 +45,7 @@ class WeatherPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.cloud,
-                              color: Colors.white,
-                              size: 80,
-                            ),
+                            Icon(Icons.cloud, color: Colors.white, size: 80),
                           ],
                         ),
                       ),
