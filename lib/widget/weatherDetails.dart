@@ -12,7 +12,7 @@ Widget weatherDetails(String label, IconData icon, String value, String unit) {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: Colors.white, size: 16),
+            Icon(icon, color: Colors.white, size: 28),
             SizedBox(width: 15),
             Text(
               label,
