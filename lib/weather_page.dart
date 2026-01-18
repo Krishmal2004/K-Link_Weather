@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:wheather_application/main.dart';
 import 'package:wheather_application/home_page.dart';
 import 'package:wheather_application/widget/glassCircle.dart';
+import 'package:wheather_application/widget/weatherDetails.dart';
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
@@ -83,6 +84,19 @@ class WeatherPage extends StatelessWidget {
                                 fontSize: 16,
                               ),
                             ),
+                            //SizedBox(height: 60,),
+                            /*GridView.count(
+                              crossAxisCount: 2,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              childAspectRatio: 1.5,
+                              children: [
+                                weatherDetails('Wind', Icons.water_drop_outlined, '3.4', 'km/h'),
+                                weatherDetails('Humidity', Icons.water_drop_outlined, '78', '%'),
+                                weatherDetails('Pressure', Icons.speed, '1016', 'hpa'),
+                                weatherDetails('UV Index',Icons.wb_sunny_outlined, '2', ''),
+                              ],
+                            ),*/
                           ],
                         ),
                       ),
@@ -141,6 +155,26 @@ class WeatherPage extends StatelessWidget {
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(height: 300),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width *0.8,
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisSpacing: 20,
+                          childAspectRatio: 1.4,
+                          children: [
+                            weatherDetails('Wind', Icons.air, '3.4', 'km/h'),
+                            weatherDetails('Humaidity', Icons.water_drop_outlined, '78', '%'),
+                            weatherDetails('Pressure', Icons.speed, '1016', 'hpa'),
+                            weatherDetails('UV index', Icons.wb_sunny_outlined, '2', '')
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
