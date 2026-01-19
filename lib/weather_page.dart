@@ -77,7 +77,7 @@ class WeatherPage extends StatelessWidget {
                                 child: glassCircle(
                                   size: 180,
                                   child: const Icon(
-                                    Icons.cloud,
+                                    Icons.nights_stay,
                                     color: Colors.white,
                                     size: 80,
                                   ),
