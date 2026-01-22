@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wheather_application/widget/profile_glassSquare.dart'
+import 'package:wheather_application/widget/profile_glassSquare.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -127,6 +127,8 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: 10,),
+                      profileGlassSquare("Sri Lanka", "7:36 AM", "Mostly Sunny", "8°", "H:8° L:8°"),
                     ],
                   ),
                 ),
