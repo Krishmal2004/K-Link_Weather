@@ -14,123 +14,138 @@ class ProfilePage extends StatelessWidget {
         body: Stack(
           children: [
             SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Weather',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w500,
-                            ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Weather',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white.withOpacity(0.1),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.1),
-                              ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.1),
+                          ),
+                          child: PopupMenuButton<String>(
+                            icon: const Icon(
+                              Icons.more_horiz,
+                              color: Colors.white,
                             ),
-                            child: PopupMenuButton<String>(
-                              icon: const Icon(
-                                Icons.more_horiz,
-                                color: Colors.white,
+                            offset: const Offset(0, 50),
+                            color: const Color(0xFF1E1E1E),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: 'Edit List',
+                                child: Text(
+                                  'Edit List',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                              offset: const Offset(0, 50),
-                              color: Colors.white.withOpacity(0.1),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                              const PopupMenuItem(
+                                value: 'Notifications',
+                                child: Text(
+                                  'Notifications',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                              onSelected: (String value) {
-                                debugPrint('Selected: $value');
-                              },
-                              itemBuilder: (BuildContext context) => [
-                                const PopupMenuItem(
-                                  value: 'Edit List',
-                                  child: Text(
-                                    'Edit List',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'Notifications',
-                                  child: Text(
-                                    'Notifications',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'Celsius',
-                                  child: Text(
-                                    'Celsius',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'Fahrenheit',
-                                  child: Text(
-                                    'Fahrenheit',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'Units',
-                                  child: Text(
-                                    'Units',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'Report an Issue',
-                                  child: Text(
-                                    'Report an Issue',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Search for a city',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.5),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
-                      profileGlassSquare("Sri Lanka", "7:36 AM", "Mostly Sunny", "8°", "H:8° L:8°"),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            profileGlassSquare(
+                              country: "Sri Lanka",
+                              time: "7:36 AM",
+                              detail: "Mostly Sunny",
+                              temp: "24°",
+                              location: "H:31° L:21°",
+                              backgroundImage: 'assets/home_page.jpg',
+                            ),
+                            const SizedBox(height: 15),
+                            profileGlassSquare(
+                              country: "Cupertino",
+                              time: "9:06 AM",
+                              detail: "Partly Cloudy",
+                              temp: "7°",
+                              location: "H:19° L:5°",
+                              backgroundImage: 'assets/home_page.jpg',
+                            ),
+                            const SizedBox(height: 15),
+                            profileGlassSquare(
+                              country: "New York",
+                              time: "10:38 AM",
+                              detail: "Clear",
+                              temp: "-3°",
+                              location: "H:0° L:-5°",
+                              backgroundImage: 'assets/home_page.jpg',
+                            ),
+                            const SizedBox(height: 30),
+                            profileGlassSquare(
+                              country: "New York",
+                              time: "10:38 AM",
+                              detail: "Clear",
+                              temp: "-3°",
+                              location: "H:0° L:-5°",
+                              backgroundImage: 'assets/home_page.jpg',
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              textAlign: TextAlign.start,
+                              'Learn more about weather data and map data',
+                              style: TextStyle(
+                                color: Colors.white60,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
