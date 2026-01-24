@@ -61,6 +61,42 @@ class ProfilePage extends StatelessWidget {
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
+                              const PopupMenuItem(
+                                value: 'Celsius',
+                                child: Text(
+                                  'Celsius',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'Fahrenheit',
+                                child: Text(
+                                  'Fahrenheit',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'Units',
+                                child: Text(
+                                  'Units',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'Report an Issue',
+                                child: Text(
+                                  'Report an Issue',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
