@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:wheather_application/main.dart';
 import 'package:wheather_application/profilePage.dart';
 import 'package:wheather_application/weather_page.dart';
+import 'package:wheather_application/loging.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -67,7 +68,7 @@ class HomePage extends StatelessWidget {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      ProfilePage(),
+                                      LoginPage(),
                               transitionsBuilder:
                                   (
                                     context,

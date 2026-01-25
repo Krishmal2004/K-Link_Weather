@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wheather_application/home_page.dart';
+import 'package:wheather_application/profilePage.dart';
+import 'package:wheather_application/weather_page.dart';
+
 
 
 void main() async {
