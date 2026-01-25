@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wheather_application/widget/profile_glassSquare.dart';
@@ -19,82 +21,52 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Weather',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 36,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white.withOpacity(0.1),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
                           ),
                           child: PopupMenuButton<String>(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.more_horiz,
-                              color: Colors.white,
+                              color: Colors.white.withOpacity(1),
                             ),
-                            offset: const Offset(0, 50),
-                            color: const Color(0xFF1E1E1E),
+                            offset: Offset(0, 50),
+                            color: Color(0xFF1E1E1E),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
                             itemBuilder: (context) => [
-                              const PopupMenuItem(
-                                value: 'Edit List',
+                              PopupMenuItem(
+                                value: 'settings',
                                 child: Text(
-                                  'Edit List',
+                                  'Settings',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                              const PopupMenuItem(
-                                value: 'Notifications',
+                              PopupMenuItem(
+                                value: 'logout',
                                 child: Text(
-                                  'Notifications',
+                                  'Logout',
                                   style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'Celsius',
-                                child: Text(
-                                  'Celsius',
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'Fahrenheit',
-                                child: Text(
-                                  'Fahrenheit',
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'Units',
-                                child: Text(
-                                  'Units',
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                value: 'Report an Issue',
-                                child: Text(
-                                  'Report an Issue',
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
                                 ),
                               ),
                             ],
@@ -102,82 +74,41 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.search,
-                            color: Colors.white.withOpacity(0.5),
+                    SizedBox(height: 20),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 10,
+                          sigmaY: 10,
+                        ),
+                        child: TextField(
+                          style: TextStyle(
+                            color: Colors.white,
                           ),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Search for a city',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
+                          decoration: InputDecoration(
+                            hintText: 'Search for a city',
+                            hintStyle: TextStyle(color: Colors.white70),
+                            fillColor: Colors.white.withOpacity(0.1),
+                            filled: true,
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.white70,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          children: [
-                            profileGlassSquare(
-                              country: "Sri Lanka",
-                              time: "7:36 AM",
-                              detail: "Mostly Sunny",
-                              temp: "24°",
-                              location: "H:31° L:21°",
-                              backgroundImage: 'assets/home_page.jpg',
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15,
                             ),
-                            const SizedBox(height: 15),
-                            profileGlassSquare(
-                              country: "Cupertino",
-                              time: "9:06 AM",
-                              detail: "Partly Cloudy",
-                              temp: "7°",
-                              location: "H:19° L:5°",
-                              backgroundImage: 'assets/home_page.jpg',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide.none,
                             ),
-                            const SizedBox(height: 15),
-                            profileGlassSquare(
-                              country: "New York",
-                              time: "10:38 AM",
-                              detail: "Clear",
-                              temp: "-3°",
-                              location: "H:0° L:-5°",
-                              backgroundImage: 'assets/home_page.jpg',
-                            ),
-                            const SizedBox(height: 30),
-                            profileGlassSquare(
-                              country: "New York",
-                              time: "10:38 AM",
-                              detail: "Clear",
-                              temp: "-3°",
-                              location: "H:0° L:-5°",
-                              backgroundImage: 'assets/home_page.jpg',
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              textAlign: TextAlign.start,
-                              'Learn more about weather data and map data',
-                              style: TextStyle(
-                                color: Colors.white60,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(
+                                color: Colors.white.withOpacity(0.3),
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),

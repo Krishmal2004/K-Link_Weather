@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wheather_application/profilePage.dart';
 import 'package:wheather_application/widget/logingWidget.dart';
+import 'package:wheather_application/weather_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -35,7 +36,10 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 10),
                 const Text(
                   'Login to your account to continue',
-                  style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 2, 1, 1)),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color.fromARGB(255, 2, 1, 1),
+                  ),
                 ),
                 SizedBox(height: 20),
                 logingWidget(
@@ -51,62 +55,70 @@ class LoginPage extends StatelessWidget {
                   isPassword: true,
                 ),
                 SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white.withOpacity(0.6),
-                      shadowColor: Colors.black.withOpacity(1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 5,
-                    ),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 2, 1, 1),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white.withOpacity(0.6),
-                      shadowColor: Colors.black.withOpacity(1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 5,
-                    ),
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 2, 1, 1),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WeatherPage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.6),
+                          shadowColor: Colors.black.withOpacity(1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 5,
+                        ),
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 2, 1, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.6),
+                          shadowColor: Colors.black.withOpacity(1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 5,
+                        ),
+                        child: Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 2, 1, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
