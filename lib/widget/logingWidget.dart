@@ -8,11 +8,11 @@ Widget logingWidget({
 }) {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.1),
+      color: Colors.white.withOpacity(0.6),
       borderRadius: BorderRadius.circular(20),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.03),
+          color: Colors.black.withOpacity(0.5),
           blurRadius: 10,
           offset: Offset(0, 5),
         ),
@@ -20,12 +20,12 @@ Widget logingWidget({
     ),
     child: TextField(
       style: TextStyle(
-        color: Colors.white
+        color: Colors.black,
       ),
       controller: controller,
       obscureText: isPassword,
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.white),
+        prefixIcon: Icon(icon, color: Colors.black),
         hintText: label,
         border: InputBorder.none,
         contentPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 15),

@@ -60,6 +60,7 @@ flutter:
   assets:
   - assets/home_page.jpg
   - assets/weather_page.jpg
+  - assets/logingPage.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
