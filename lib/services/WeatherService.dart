@@ -1,15 +1,31 @@
+// lib/services/WeatherService.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Map<String, dynamic>> fetchLiveWeather(String city) async {
-  const apiKey = 'ef4b72b470a84c45b45193045261801';
-  final url = Uri.parse(
-    'https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey&units=metric',
-  );
-  final response = await http.get(url);
-  if (response.statusCode == 200) {
-    return json.decode(response.body);
-  } else {
-    throw Exception('City not Found');
+class WeatherService { 
+  final String apiKey = 'ef4b72b470a84c45b45193045261801';
+
+  Future<Map<String, dynamic>> fetchLiveWeather(String city) async {
+    final url = Uri.parse(
+      'https://api.weatherapi.com/v1/current.json?key=$apiKey&q=$city&aqi=no',
+    );
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('City not Found');
+    }
+  }
+  Future<List<dynamic>> getCitySuggestions(String query) async {
+    if (query.isEmpty) return [];
+    final url = Uri.parse(
+      'https://api.weatherapi.com/v1/search.json?key=$apiKey&q=$query',
+    );
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return json.decode(response.body); // Returns a List
+    } else {
+      return [];
+    }
   }
 }

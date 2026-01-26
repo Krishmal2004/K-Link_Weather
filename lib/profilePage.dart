@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wheather_application/loging.dart';
-import 'package:wheather_application/services/WeatherService.dart';
 import 'package:wheather_application/weather_page.dart';
 import 'package:wheather_application/widget/profile_glassSquare.dart';
 import 'package:wheather_application/services/AuthService.dart';
@@ -107,66 +106,59 @@ class ProfilePage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 20),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: TextField(
-                          onSubmitted: (value) async {
-                            if (value.isNotEmpty) {
-                              try {
-                                // Fetch live data from your service
-                                final weatherData = await fetchLiveWeather(
-                                  value,
-                                );
-
-                                if (context.mounted) {
-                                  // Pass this data to your WeatherPage or show a preview
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const WeatherPage(), // You should update WeatherPage to accept data
-                                    ),
-                                  );
-                                }
-                              } catch (e) {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Error: ${e.toString()}"),
-                                    ),
-                                  );
-                                }
-                              }
-                            }
-                          },
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Search for a city',
-                            hintStyle: TextStyle(color: Colors.white70),
-                            fillColor: Colors.white.withOpacity(0.1),
-                            filled: true,
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Colors.white70,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.3),
+                    SearchAnchor(
+                      builder:
+                          (BuildContext context, SearchController controller) {
+                            return SearchBar(
+                              controller: controller,
+                              hintText: 'Search for a city',
+                              hintStyle: WidgetStateProperty.all(
+                                const TextStyle(color: Colors.white70),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
+                              backgroundColor: WidgetStateProperty.all(
+                                Colors.white.withOpacity(0.1),
+                              ),
+                              onTap: () => controller.openView(),
+                              onChanged: (_) => controller.openView(),
+                              leading: const Icon(
+                                Icons.search,
+                                color: Colors.white70,
+                              ),
+                            );
+                          },
+                      suggestionsBuilder:
+                          (
+                            BuildContext context,
+                            SearchController controller,
+                          ) async {
+                            final String input = controller.text;
+                            if (input.isEmpty) return [];
+                            final weatherService = WeatherService();
+                            //final response = await getCitySuggestions(input);
+                            final List<dynamic> suggestions = await weatherService.getCitySuggestions(input);
+                            return suggestions.map((city) {
+                              final String cityName = city['name'];
+                              final String country = city['country'];
+
+                              return ListTile(
+                                title: Text('$cityName, $country'),
+                                onTap: () async {
+                                  final weatherService = WeatherService();
+                                  final weatherData = await weatherService.fetchLiveWeather(
+                                    cityName,
+                                  );
+                                  if (context.mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => WeatherPage(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              );
+                            });
+                          },
                     ),
                     SizedBox(height: 20),
                     Expanded(
@@ -203,49 +195,6 @@ class ProfilePage extends StatelessWidget {
                           );
                         },
                       ),
-                      /*child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          children: [
-                            profileGlassSquare(
-                              context: context,
-                              destinationPage: WeatherPage(),
-                              country: 'Sri Lanka',
-                              time: 'My Location',
-                              detail: 'party Cloudy',
-                              temp: '24°',
-                              location: 'H:31° L:21°',
-                            ),
-                            profileGlassSquare(
-                              context: context,
-                              destinationPage: WeatherPage(),
-                              country: 'Sri Lanka',
-                              time: 'My Location',
-                              detail: 'party Cloudy',
-                              temp: '24°',
-                              location: 'H:31° L:21°',
-                            ),
-                            profileGlassSquare(
-                              context: context,
-                              destinationPage: WeatherPage(),
-                              country: 'Sri Lanka',
-                              time: 'My Location',
-                              detail: 'party Cloudy',
-                              temp: '24°',
-                              location: 'H:31° L:21°',
-                            ),
-                            profileGlassSquare(
-                              context: context,
-                              destinationPage: WeatherPage(),
-                              country: 'Sri Lanka',
-                              time: 'My Location',
-                              detail: 'party Cloudy',
-                              temp: '24°',
-                              location: 'H:31° L:21°',
-                            ),
-                          ],
-                        ),
-                      ),*/
                     ),
                     SizedBox(
                       width: double.infinity,
