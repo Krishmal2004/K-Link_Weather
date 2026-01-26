@@ -138,7 +138,42 @@ class ProfilePage extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     Expanded(
-                      child: SingleChildScrollView(
+                      child: FutureBuilder<List<Map<String, dynamic>>>(
+                        future: Future.value(
+                          [],
+                        ), // Add your actual future here to fetch saved locations
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return const Center(
+                              child: Text("No locations saved yet"),
+                            );
+                          }
+                          final weatherList = snapshot.data!;
+                          return ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: weatherList.length,
+                            itemBuilder: (context, index) {
+                              final item = weatherList[index];
+                              return profileGlassSquare(
+                                context: context,
+                                destinationPage: WeatherPage(),
+                                country: item['country'],
+                                time: "Saved Location",
+                                detail: item['detail'] ?? '/N/A',
+                                temp: item['temp'] ?? '--°',
+                                location: item['high_low'] ?? 'H:--° L:--°',
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      /*child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
@@ -180,7 +215,7 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
+                      ),*/
                     ),
                     SizedBox(
                       width: double.infinity,

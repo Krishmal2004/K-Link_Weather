@@ -25,4 +25,15 @@ class Authservice {
   Future<void> signOut() async {
     await _supabase.auth.signOut();
   }
+
+  Future<List<Map<String, dynamic>>> getUserWeatherData() async {
+    final userId = _supabase.auth.currentUser?.id;
+    if (userId == null) {
+      return [];
+    }
+    return await _supabase
+        .from('weather_locations')
+        .select()
+        .eq('userId', userId);
+  }
 }
