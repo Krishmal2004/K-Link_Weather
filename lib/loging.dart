@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:wheather_application/profilePage.dart';
+import 'package:wheather_application/services/AuthService.dart';
 import 'package:wheather_application/widget/logingWidget.dart';
 import 'package:wheather_application/weather_page.dart';
+import 'package:wheather_application/signUp.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final Authservice _authservice = Authservice();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +51,13 @@ class LoginPage extends StatelessWidget {
                 logingWidget(
                   label: 'Email',
                   icon: Icons.email,
-                  controller: TextEditingController(),
+                  controller: _emailController,
                 ),
                 SizedBox(height: 20),
                 logingWidget(
                   label: 'Password',
                   icon: Icons.lock,
-                  controller: TextEditingController(),
+                  controller: _passwordController,
                   isPassword: true,
                 ),
                 SizedBox(height: 30),
@@ -61,13 +67,27 @@ class LoginPage extends StatelessWidget {
                       width: double.infinity,
                       height: 60,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WeatherPage(),
-                            ),
-                          );
+                        onPressed: () async {
+                          try {
+                            await _authservice.login(
+                              _emailController.text.trim(),
+                              _passwordController.text.trim(),
+                            );
+                            if (context.mounted) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfilePage(),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Loging Failed: ${e.toString()}'),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white.withOpacity(0.6),
@@ -93,11 +113,11 @@ class LoginPage extends StatelessWidget {
                       height: 60,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfilePage(),
-                            ),
+                              builder: (context) => const SignUpPage(),
+                            ), 
                           );
                         },
                         style: ElevatedButton.styleFrom(
