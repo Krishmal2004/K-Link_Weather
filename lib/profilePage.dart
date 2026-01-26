@@ -2,9 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wheather_application/loging.dart';
+import 'package:wheather_application/services/WeatherService.dart';
 import 'package:wheather_application/weather_page.dart';
 import 'package:wheather_application/widget/profile_glassSquare.dart';
 import 'package:wheather_application/services/AuthService.dart';
+import 'package:wheather_application/services/WeatherService.dart';
+//import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -109,6 +112,35 @@ class ProfilePage extends StatelessWidget {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                         child: TextField(
+                          onSubmitted: (value) async {
+                            if (value.isNotEmpty) {
+                              try {
+                                // Fetch live data from your service
+                                final weatherData = await fetchLiveWeather(
+                                  value,
+                                );
+
+                                if (context.mounted) {
+                                  // Pass this data to your WeatherPage or show a preview
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const WeatherPage(), // You should update WeatherPage to accept data
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Error: ${e.toString()}"),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
+                          },
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'Search for a city',
@@ -139,9 +171,7 @@ class ProfilePage extends StatelessWidget {
                     SizedBox(height: 20),
                     Expanded(
                       child: FutureBuilder<List<Map<String, dynamic>>>(
-                        future: Future.value(
-                          [],
-                        ), // Add your actual future here to fetch saved locations
+                        future: Future.value([]),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
