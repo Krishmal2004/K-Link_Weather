@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wheather_application/loging.dart';
 import 'package:wheather_application/weather_page.dart';
 import 'package:wheather_application/widget/profile_glassSquare.dart';
+import 'package:wheather_application/services/AuthService.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -50,10 +52,29 @@ class ProfilePage extends StatelessWidget {
                               color: Colors.white.withOpacity(1),
                             ),
                             offset: Offset(0, 50),
-                            color: Color.fromARGB(255, 2, 17, 29).withOpacity(0.8),
+                            color: Color.fromARGB(
+                              255,
+                              2,
+                              17,
+                              29,
+                            ).withOpacity(0.8),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
+                            onSelected: (value) async {
+                              if (value == 'logout') {
+                                await Authservice().signOut();
+                                if (context.mounted) {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginPage(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
+                              }
+                            },
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 value: 'editList',
@@ -176,19 +197,6 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    /*Column(
-                      children: [
-                        Text(
-                          textAlign: TextAlign.center,
-                          'Learn more about weather data and map data',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),*/
                   ],
                 ),
               ),
