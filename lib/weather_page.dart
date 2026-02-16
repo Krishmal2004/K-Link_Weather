@@ -5,12 +5,27 @@ import 'package:wheather_application/widget/weatherDetails.dart';
 import 'package:wheather_application/widget/bottomDetails.dart'; 
 
 class WeatherPage extends StatelessWidget {
-  const WeatherPage({super.key});
+  final Map<String, dynamic>? weatherData;
+  const WeatherPage({super.key, this.weatherData});
+
   @override
   Widget build(BuildContext context) {
+    // Extract dynamic data from the JSON map inside build
+    final location = weatherData?['location']?['name'] ?? 'NEW YORK';
+    final temp = weatherData?['current']?['temp_c']?.toInt().toString() ?? '10';
+    final condition = weatherData?['current']?['condition']?['text'] ?? 'RAINY DAY';
+    final wind = weatherData?['current']?['wind_kph']?.toString() ?? '3.4';
+    final humidity = weatherData?['current']?['humidity']?.toString() ?? '78';
+    final pressure = weatherData?['current']?['pressure_mb']?.toString() ?? '1016';
+    final uv = weatherData?['current']?['uv']?.toString() ?? '2';
+
+    // Extract hourly list from forecast data
+    final List hourlyList = weatherData?['forecast']?['forecastday']?[0]?['hour'] ?? [];
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
+        backgroundColor: Colors.black, // Fixes the white bar at bottom
         body: Stack(
           children: [
             Positioned.fill(
@@ -21,6 +36,7 @@ class WeatherPage extends StatelessWidget {
               ),
             ),
             SafeArea(
+              bottom: false, // Allows image to flow behind navigation bar
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
@@ -32,34 +48,18 @@ class WeatherPage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'WEATHER IN\nNEW YORK',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Text(
+                            'WEATHER IN\n${location.toUpperCase()}',
+                            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w600),
                           ),
-                          const Icon(
-                            Icons.settings_suggest_rounded,
-                            color: Colors.white,
-                            size: 40,
-                          ),
+                          const Icon(Icons.settings_suggest_rounded, color: Colors.white, size: 40),
                         ],
                       ),
                       Row(
                         children: [
-                          Expanded(
-                            child: Divider(
-                              color: Colors.white.withOpacity(0.5),
-                              thickness: 0.4,
-                            ),
-                          ),
+                          Expanded(child: Divider(color: Colors.white.withOpacity(0.5), thickness: 0.4)),
                           const SizedBox(width: 10),
-                          const Text(
-                            'RAINY DAY',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
+                          Text(condition.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 18)),
                         ],
                       ),
                       const SizedBox(height: 80),
@@ -72,48 +72,19 @@ class WeatherPage extends StatelessWidget {
                             clipBehavior: Clip.none,
                             children: [
                               Positioned(
-                                left: -10,
-                                bottom: 100,
-                                child: glassCircle(
-                                  size: 180,
-                                  child: const Icon(
-                                    Icons.nights_stay,
-                                    color: Colors.white,
-                                    size: 80,
-                                  ),
-                                ),
+                                left: -10, bottom: 100,
+                                child: glassCircle(size: 180, child: const Icon(Icons.nights_stay, color: Colors.white, size: 80)),
                               ),
                               Positioned(
-                                right: -18,
-                                top: -10,
+                                right: -18, top: -10,
                                 child: glassCircle(
                                   size: 220,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text(
-                                        '25 January 2025',
-                                        style: TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      const Text(
-                                        '10°',
-                                        style: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 80,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.0,
-                                        ),
-                                      ),
-                                      const Text(
-                                        '/ Real Feel 8°',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                      const Text('26 January 2026', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                      Text('$temp°', style: const TextStyle(color: Colors.white54, fontSize: 80, fontWeight: FontWeight.w400, height: 1.0)),
+                                      const Text('/ Real Feel 8°', style: TextStyle(color: Colors.white, fontSize: 16)),
                                     ],
                                   ),
                                 ),
@@ -129,60 +100,38 @@ class WeatherPage extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         childAspectRatio: 1.5,
                         children: [
-                          weatherDetails('Wind', Icons.air, '3.4', 'km/h'),
-                          weatherDetails(
-                            'Humidity',
-                            Icons.water_drop_outlined,
-                            '78',
-                            '%',
-                          ),
-                          weatherDetails(
-                            'Pressure',
-                            Icons.speed,
-                            '1016',
-                            'hpa',
-                          ),
-                          weatherDetails(
-                            'UV Index',
-                            Icons.wb_sunny_outlined,
-                            '2',
-                            '',
-                          ),
+                          weatherDetails('Wind', Icons.air, wind, 'km/h'),
+                          weatherDetails('Humidity', Icons.water_drop_outlined, humidity, '%'),
+                          weatherDetails('Pressure', Icons.speed, pressure, 'hpa'),
+                          weatherDetails('UV Index', Icons.wb_sunny_outlined, uv, ''),
                         ],
                       ),
-                      Divider(
-                        color: Colors.white.withOpacity(0.5),
-                        thickness: 0.4,
-                      ),
+                      Divider(color: Colors.white.withOpacity(0.5), thickness: 0.4),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          'Rainy Condition will continue all day.',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
+                        child: Text('Hourly Forecast', style: TextStyle(color: Colors.white, fontSize: 16)),
                       ),
+                      
+                      // DYNAMIC HOURLY FORECAST SECTION
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
                         child: Row(
-                          children: [
-                            bottomDetails('4 PM', Icons.cloud, '10°'),
-                            SizedBox(width: 20,),
-                            bottomDetails('5 PM', Icons.cloud, '9°'),
-                            SizedBox(width: 20,),
-                            bottomDetails(
-                              '5:46 PM',
-                              Icons.wb_twilight,
-                              'SUNSET',
-                            ),
-                            SizedBox(width: 20,),
-                            bottomDetails('6 PM', Icons.nights_stay, '9°'),
-                            SizedBox(width: 20,),
-                            bottomDetails('7 PM', Icons.nights_stay, '8°'),
-                            SizedBox(width: 20,),
-                            bottomDetails('8 PM', Icons.nights_stay, '8°'),
-                            bottomDetails('9 PM', Icons.nights_stay, '7°'),
-                          ],
+                          children: hourlyList.map((hour) {
+                            final String time = hour['time'].toString().split(' ')[1]; // Extracts "HH:mm"
+                            final String hTemp = hour['temp_c'].toInt().toString();
+                            final String hCondition = hour['condition']['text'].toLowerCase();
+
+                            IconData hIcon = Icons.cloud;
+                            if (hCondition.contains('sun')) hIcon = Icons.wb_sunny;
+                            if (hCondition.contains('rain')) hIcon = Icons.umbrella;
+                            if (hCondition.contains('night')) hIcon = Icons.nights_stay;
+
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: bottomDetails(time, hIcon, '$hTemp°'),
+                            );
+                          }).toList(),
                         ),
                       ),
                       const SizedBox(height: 50),

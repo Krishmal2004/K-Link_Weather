@@ -134,14 +134,13 @@ class ProfilePage extends StatelessWidget {
                             final String input = controller.text;
                             if (input.isEmpty) return [];
                             final weatherService = WeatherService();
-                            //final response = await getCitySuggestions(input);
                             final List<dynamic> suggestions = await weatherService.getCitySuggestions(input);
                             return suggestions.map((city) {
                               final String cityName = city['name'];
                               final String country = city['country'];
 
                               return ListTile(
-                                title: Text('$cityName, $country'),
+                                title: Text('$cityName, $country', style: TextStyle(color: Colors.black),),
                                 onTap: () async {
                                   final weatherService = WeatherService();
                                   final weatherData = await weatherService.fetchLiveWeather(
@@ -151,7 +150,7 @@ class ProfilePage extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => WeatherPage(),
+                                        builder: (context) => WeatherPage(weatherData: weatherData,),
                                       ),
                                     );
                                   }
