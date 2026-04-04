@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:wheather_application/widget/glassCircle.dart'; 
 import 'package:wheather_application/widget/weatherDetails.dart'; 
 import 'package:wheather_application/widget/bottomDetails.dart'; 
@@ -10,22 +11,37 @@ class WeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Extract dynamic data from the JSON map inside build
     final location = weatherData?['location']?['name'] ?? 'NEW YORK';
     final temp = weatherData?['current']?['temp_c']?.toInt().toString() ?? '10';
+    
+    final feelsLike = weatherData?['current']?['feelslike_c']?.toInt().toString() ?? '8';
+    
     final condition = weatherData?['current']?['condition']?['text'] ?? 'RAINY DAY';
     final wind = weatherData?['current']?['wind_kph']?.toString() ?? '3.4';
     final humidity = weatherData?['current']?['humidity']?.toString() ?? '78';
     final pressure = weatherData?['current']?['pressure_mb']?.toString() ?? '1016';
     final uv = weatherData?['current']?['uv']?.toString() ?? '2';
 
-    // Extract hourly list from forecast data
+    final String currentDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
+
+    final isDay = weatherData?['current']?['is_day'] ?? 1;
+    final conditionLower = condition.toLowerCase();
+    IconData mainIcon = Icons.wb_sunny;
+    
+    if (conditionLower.contains('rain')) {
+      mainIcon = Icons.umbrella;
+    } else if (conditionLower.contains('cloud') || conditionLower.contains('overcast')) {
+      mainIcon = Icons.cloud;
+    } else if (isDay == 0 || conditionLower.contains('night') || conditionLower.contains('clear')) {
+      mainIcon = Icons.nights_stay;
+    }
+
     final List hourlyList = weatherData?['forecast']?['forecastday']?[0]?['hour'] ?? [];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
-        backgroundColor: Colors.black, // Fixes the white bar at bottom
+        backgroundColor: Colors.black, 
         body: Stack(
           children: [
             Positioned.fill(
@@ -36,7 +52,7 @@ class WeatherPage extends StatelessWidget {
               ),
             ),
             SafeArea(
-              bottom: false, // Allows image to flow behind navigation bar
+              bottom: false, 
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
@@ -73,7 +89,7 @@ class WeatherPage extends StatelessWidget {
                             children: [
                               Positioned(
                                 left: -10, bottom: 100,
-                                child: glassCircle(size: 180, child: const Icon(Icons.nights_stay, color: Colors.white, size: 80)),
+                                child: glassCircle(size: 180, child: Icon(mainIcon, color: Colors.white, size: 80)),
                               ),
                               Positioned(
                                 right: -18, top: -10,
@@ -82,9 +98,9 @@ class WeatherPage extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text('26 January 2026', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                      Text(currentDate, style: const TextStyle(color: Colors.white70, fontSize: 14)),
                                       Text('$temp°', style: const TextStyle(color: Colors.white54, fontSize: 80, fontWeight: FontWeight.w400, height: 1.0)),
-                                      const Text('/ Real Feel 8°', style: TextStyle(color: Colors.white, fontSize: 16)),
+                                      Text('/ Real Feel $feelsLike°', style: const TextStyle(color: Colors.white, fontSize: 16)),
                                     ],
                                   ),
                                 ),
@@ -112,7 +128,6 @@ class WeatherPage extends StatelessWidget {
                         child: Text('Hourly Forecast', style: TextStyle(color: Colors.white, fontSize: 16)),
                       ),
                       
-                      // DYNAMIC HOURLY FORECAST SECTION
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
@@ -125,7 +140,7 @@ class WeatherPage extends StatelessWidget {
                             IconData hIcon = Icons.cloud;
                             if (hCondition.contains('sun')) hIcon = Icons.wb_sunny;
                             if (hCondition.contains('rain')) hIcon = Icons.umbrella;
-                            if (hCondition.contains('night')) hIcon = Icons.nights_stay;
+                            if (hCondition.contains('night') || hCondition.contains('clear')) hIcon = Icons.nights_stay;
 
                             return Padding(
                               padding: const EdgeInsets.only(right: 20),
