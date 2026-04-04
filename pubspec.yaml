@@ -65,6 +65,7 @@ flutter:
   - assets/home_page.jpg
   - assets/weather_page.jpg
   - assets/logingPage.jpg
+  - lib/.env
 
   # To add assets to your application, add an assets section, like this:
   # assets:
