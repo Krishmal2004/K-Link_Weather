@@ -33,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const ProfilePage()),
+            MaterialPageRoute(builder: (context) =>  LoginPage()),
           );
         }
       }
@@ -59,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FaFF),
       body: SafeArea(
-        child: SingleChildScrollView( // Added to prevent overflow on small screens
+        child: SingleChildScrollView( 
           padding: const EdgeInsets.all(30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 width: double.infinity,
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : _handleSignUp, // Disable while loading
+                  onPressed: _isLoading ? null : _handleSignUp, 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0066FF),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
