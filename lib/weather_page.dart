@@ -1,17 +1,71 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:wheather_application/services/WeatherService.dart';
 import 'package:wheather_application/widget/glassCircle.dart'; 
 import 'package:wheather_application/widget/weatherDetails.dart'; 
 import 'package:wheather_application/widget/bottomDetails.dart'; 
 
-class WeatherPage extends StatelessWidget {
+class WeatherPage extends StatefulWidget {
   final Map<String, dynamic>? weatherData;
-  const WeatherPage({super.key, this.weatherData});
+  final String cityName; 
+
+  const WeatherPage({
+    super.key, 
+    this.weatherData, 
+    required this.cityName,
+  });
+
+  @override
+  State<WeatherPage> createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  Map<String, dynamic>? weatherData;
+  Timer? _timer;
+  final WeatherService _weatherService = WeatherService();
+
+  @override
+  void initState() {
+    super.initState();
+    weatherData = widget.weatherData;
+    
+    // Automatically update weather data every 15 minutes
+    _timer = Timer.periodic(const Duration(minutes: 15), (timer) {
+      _refreshWeatherData();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Important to prevent memory leaks
+    super.dispose();
+  }
+
+  Future<void> _refreshWeatherData() async {
+    try {
+      final newData = await _weatherService.fetchLiveWeather(widget.cityName);
+      if (mounted) {
+        setState(() {
+          weatherData = newData;
+        });
+      }
+    } catch (e) {
+      debugPrint("Failed to automatically update weather: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final location = weatherData?['location']?['name'] ?? 'NEW YORK';
+    if (weatherData == null) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
+    }
+
+    final location = weatherData?['location']?['name'] ?? widget.cityName;
     final temp = weatherData?['current']?['temp_c']?.toInt().toString() ?? '10';
     
     final feelsLike = weatherData?['current']?['feelslike_c']?.toInt().toString() ?? '8';
@@ -63,19 +117,47 @@ class WeatherPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'WEATHER IN\n${location.toUpperCase()}',
-                            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w600),
+                          // ADDED: Back Button
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: const Padding(
+                              padding: EdgeInsets.only(top: 4.0, right: 12.0),
+                              child: Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 24),
+                            ),
                           ),
-                          const Icon(Icons.settings_suggest_rounded, color: Colors.white, size: 40),
+                          // CHANGED: Wrapped Text in Expanded so it shares space nicely
+                          Expanded(
+                            child: Text(
+                              'WEATHER IN\n${location.toUpperCase()}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 28,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              softWrap: true,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          // Optional: Manual refresh button just in case
+                          GestureDetector(
+                            onTap: _refreshWeatherData,
+                            child: const Icon(Icons.refresh, color: Colors.white, size: 30),
+                          ),
                         ],
                       ),
                       Row(
                         children: [
                           Expanded(child: Divider(color: Colors.white.withOpacity(0.5), thickness: 0.4)),
                           const SizedBox(width: 10),
-                          Text(condition.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 18)),
+                          Flexible(
+                            child: Text(
+                              condition.toUpperCase(),
+                              style: const TextStyle(color: Colors.white, fontSize: 18),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 80),

@@ -6,7 +6,7 @@ import 'package:wheather_application/weather_page.dart';
 import 'package:wheather_application/widget/profile_glassSquare.dart';
 import 'package:wheather_application/services/AuthService.dart';
 import 'package:wheather_application/services/WeatherService.dart';
-import 'package:wheather_application/services/savingData.dart'; // Import your new backend file
+import 'package:wheather_application/services/savingData.dart'; 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -17,18 +17,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final SavingData _savingData =
-      SavingData(); // Initialize the new backend service
+  final SavingData _savingData = SavingData(); 
 
   Future<List<Map<String, dynamic>>> _loadSavedLocations() async {
-    // Fetch directly from Supabase instead of local storage
     return await _savingData.getSavedLocations();
   }
 
+  // ADDED BACK: The method to save the location and refresh the UI
   Future<void> _saveLocation(Map<String, dynamic> weatherData) async {
-    // Save directly to Supabase
-    await _savingData.saveLocationToBackend(weatherData);
-    setState(() {}); // Refresh UI
+    try {
+      await _savingData.saveLocationToBackend(weatherData);
+      setState(() {}); // Refresh UI after saving
+    } catch (e) {
+      debugPrint("Error saving location: $e");
+    }
   }
 
   void _showProfileOptions(BuildContext context) {
@@ -194,9 +196,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: const TextStyle(color: Colors.black),
                                 ),
                                 onTap: () async {
+                                  // Fetch live weather
                                   final weatherData = await weatherService
                                       .fetchLiveWeather(cityName);
 
+                                  // ADDED BACK: Save to Supabase
                                   await _saveLocation(weatherData);
 
                                   if (context.mounted) {
@@ -206,6 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       MaterialPageRoute(
                                         builder: (context) => WeatherPage(
                                           weatherData: weatherData,
+                                          cityName: cityName,
                                         ),
                                       ),
                                     );
@@ -247,16 +252,78 @@ class _ProfilePageState extends State<ProfilePage> {
                           itemCount: weatherList.length,
                           itemBuilder: (context, index) {
                             final item = weatherList[index];
-                            return profileGlassSquare(
-                              context: context,
-                              destinationPage: WeatherPage(
-                                weatherData: item['weatherData'],
+                            final savedCityName = item['weatherData']?['location']?['name'] ?? item['country'] ?? 'Unknown';
+                            final locationKey = item['high_low'] ?? savedCityName;
+
+                            return Dismissible(
+                              key: Key(locationKey + index.toString()),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFFFF4D4D), Color(0xFFB71C1C)],
+                                  ),
+                                ),
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 24),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.delete_rounded, color: Colors.white, size: 30),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Remove',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              country: item['country'] ?? 'Unknown',
-                              time: "Saved Location",
-                              detail: item['detail'] ?? 'N/A',
-                              temp: item['temp'] ?? '--°',
-                              location: item['high_low'] ?? 'Unknown',
+                              confirmDismiss: (_) async {
+                                return await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    backgroundColor: const Color.fromARGB(255, 2, 17, 29),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                    title: const Text('Remove Location', style: TextStyle(color: Colors.white)),
+                                    content: Text(
+                                      'Remove $savedCityName from saved locations?',
+                                      style: const TextStyle(color: Colors.white70),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.of(ctx).pop(false),
+                                        child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(ctx).pop(true),
+                                        child: const Text('Remove', style: TextStyle(color: Colors.redAccent)),
+                                      ),
+                                    ],
+                                  ),
+                                ) ?? false;
+                              },
+                              onDismissed: (_) async {
+                                await _savingData.deleteLocation(locationKey);
+                                setState(() {});
+                              },
+                              child: profileGlassSquare(
+                                context: context,
+                                destinationPage: WeatherPage(
+                                  weatherData: item['weatherData'],
+                                  cityName: savedCityName,
+                                ),
+                                country: item['country'] ?? 'Unknown',
+                                time: "Saved Location",
+                                detail: item['detail'] ?? 'N/A',
+                                temp: item['temp'] ?? '--°',
+                                location: item['high_low'] ?? 'Unknown',
+                              ),
                             );
                           },
                         );

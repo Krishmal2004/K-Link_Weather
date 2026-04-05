@@ -22,6 +22,17 @@ class SavingData {
     }, onConflict: 'user_id, location_name');
   }
 
+  Future<void> deleteLocation(String locationName) async {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return;
+
+    await _supabase
+        .from('saved_locations')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('location_name', locationName);
+  }
+
   Future<List<Map<String, dynamic>>> getSavedLocations() async {
     final user = _supabase.auth.currentUser;
     if (user == null) return [];
