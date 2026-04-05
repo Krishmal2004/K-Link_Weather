@@ -31,7 +31,6 @@ class _WeatherPageState extends State<WeatherPage> {
     super.initState();
     weatherData = widget.weatherData;
     
-    // Automatically update weather data every 15 minutes
     _timer = Timer.periodic(const Duration(minutes: 15), (timer) {
       _refreshWeatherData();
     });
@@ -39,7 +38,7 @@ class _WeatherPageState extends State<WeatherPage> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Important to prevent memory leaks
+    _timer?.cancel(); 
     super.dispose();
   }
 
@@ -127,7 +126,6 @@ class _WeatherPageState extends State<WeatherPage> {
                               child: Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 24),
                             ),
                           ),
-                          // CHANGED: Wrapped Text in Expanded so it shares space nicely
                           Expanded(
                             child: Text(
                               'WEATHER IN\n${location.toUpperCase()}',
@@ -140,7 +138,6 @@ class _WeatherPageState extends State<WeatherPage> {
                             ),
                           ),
                           const SizedBox(width: 12),
-                          // Optional: Manual refresh button just in case
                           GestureDetector(
                             onTap: _refreshWeatherData,
                             child: const Icon(Icons.refresh, color: Colors.white, size: 30),

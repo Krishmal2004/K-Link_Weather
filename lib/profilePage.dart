@@ -23,7 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return await _savingData.getSavedLocations();
   }
 
-  // ADDED BACK: The method to save the location and refresh the UI
   Future<void> _saveLocation(Map<String, dynamic> weatherData) async {
     try {
       await _savingData.saveLocationToBackend(weatherData);
@@ -200,7 +199,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   final weatherData = await weatherService
                                       .fetchLiveWeather(cityName);
 
-                                  // ADDED BACK: Save to Supabase
                                   await _saveLocation(weatherData);
 
                                   if (context.mounted) {
